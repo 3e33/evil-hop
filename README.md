@@ -3,7 +3,7 @@
 An Emacs package / extension / plugin / addon / \<invent a new term here> for Emacs that provides [Easy Motion](https://github.com/easymotion/vim-easymotion)-like functionality.
 
 ## How do I use it?
-1. Download the evil-hop.elc file to whatever folder you like to put your packages / extensions / etc...
+1. Download the evil-hop.elc file to whatever folder you like to put your packages / extensions / etc... in.
 If you don't have a folder for that, create one and add it to the `'load-path`
 for example
 
@@ -19,7 +19,7 @@ for example
                     "<SPC>" 'evil-hop-entry)
     ````
     
-    With this you can press <SPC> followed by almost any motion command, and it should just work for most things.
+    With this you can press \<SPC> (space key) followed by almost any motion command, and it should just work for most things.
     Not everything is supported yet. If you desperately need something that isn't working, throw me an Issue.
     
     Alternatively you can bind each key and function yourself, for example like this:
@@ -37,4 +37,11 @@ in my opinion not as good as Easy Motion, and its compatibility with Evil is som
 Evil-Hop was built with Evil and Easy-Motion in mind. So if you're coming to Emacs from Vim, Evil-Hop should be more comfortable.
 
 ## Does Evil-Hop work if I don't use Evil?
-So far, yes. But this package is primary for Evil. If you don't use Vim / Evil then you probably don't need it anyway.
+So far, yes. But that's by accident, not design. My primary goal is to extend Evil.
+
+## Is all of Easy-Motion features supported?
+Not yet, but I think the most important ones are. If you have a feature request please add an Issue.
+
+
+## Sounds good, I'm giving it a go!
+: )
