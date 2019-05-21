@@ -37,4 +37,11 @@ in my opinion not as good as Easy Motion, and its compatibility with Evil is som
 Evil-Hop was built with Evil and Easy-Motion in mind. So if you're coming to Emacs from Vim, Evil-Hop should be more comfortable.
 
 ## Does Evil-Hop work if I don't use Evil?
-So far, yes. But this package is primary for Evil. If you don't use Vim / Evil then you probably don't need it anyway.
+So far, yes. But that's by accident, not design. My primary goal is to extend Evil.
+
+## Is all of Easy-Motion features supported?
+Not yet, but I think the most important ones are. If you have a feature request please add an Issue.
+
+
+## Sounds good, I'm giving it a go!
+: )
