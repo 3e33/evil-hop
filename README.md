@@ -28,6 +28,11 @@ for example
     (my-evil-leader :states '(normal visual operator)
       "w" #'(lambda () (interactive) (evil-hop-hop 'evil-forward-word-begin)))
     ````
+
+## How do I customise it?
+`'evil-hop-highlight-keys` sets the keys that build the jump combinations.
+
+`'evil-hop-highlight` is a face that you can change to set how the highlighted areas appear.
     
 ## Why not use [Avy](https://github.com/abo-abo/avy)?
 Evil-Hop took its inspiration from Easy Motion, and tries to do things the same way.
@@ -39,7 +44,7 @@ Evil-Hop was built with Evil and Easy-Motion in mind. So if you're coming to Ema
 ## Does Evil-Hop work if I don't use Evil?
 So far, yes. But that's by accident, not design. My primary goal is to extend Evil.
 
-## Is all of Easy-Motion features supported?
+## Are all of the Easy-Motion features supported?
 Not yet, but I think the most important ones are. If you have a feature request please add an Issue.
 
 
