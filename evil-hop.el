@@ -2,7 +2,7 @@
 ;;          Evil-Hop           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Description: Inspired by Vim's Easy Motion, brings similar functionality to Emacs
-;; Version: 0.1
+;; Version: 0.2
 ;; Copyright (C) 2019 3e33 @ http://github.com/3e33
 ;;
 ;; This program is free software: you can redistribute it and/or modify
@@ -88,14 +88,14 @@ and return the new list.
                        (evil-hop-make-overlay-alist locations keys)))
          (jump-sequence "")
          (current-prefix-arg nil))
-    (evil-hop-show-jump-map (evil-hop-filter-close-positions jump-alist))
+    (evil-hop-show-jump-map (evil-hop-filter-close-positions jump-alist) (length jump-sequence))
     (while (> (length jump-alist)
               1)
       (setq jump-sequence (concat jump-sequence (string (read-char-exclusive))))
       (setq jump-alist (seq-filter #'(lambda (elt) (string-prefix-p jump-sequence (apply 'concat (car elt))))
                                    jump-alist))
       (evil-hop-remove-overlays)
-      (evil-hop-show-jump-map jump-alist))
+      (evil-hop-show-jump-map jump-alist (length jump-sequence)))
     (evil-hop-remove-overlays)
     (unless (equal jump-alist nil)
       (setq current-prefix-arg (nth 2 (car jump-alist)))
@@ -112,12 +112,14 @@ location."
       (setq result (append result (list `(,(nth i keys) ,(nth i locations) ,(+ 1 i))))))
     result))
 
-(defun evil-hop-show-jump-map (jump-alist)
+(defun evil-hop-show-jump-map (jump-alist combo-length)
   "Create and show the jump map."
   (dotimes (i (length jump-alist))
     (let* ((position (nth 1 (nth i jump-alist)))
            (key-combo (nth 0 (nth i jump-alist)))
-           (combo-part (evil-hop-get-combo-part key-combo 2))
+           (slice-max (+ (* (/ combo-length 2)) 2))
+           (slice-min (* (/ combo-length 2) 2))
+           (combo-part (evil-hop-get-combo-part key-combo slice-min slice-max))
            (line-end (evil-hop-get-eol-after-point position)))
       (evil-hop-make-overlay position
                              combo-part
@@ -186,8 +188,8 @@ for key press decisions."
       list
     (seq-subseq list start end)))
 
-(defun evil-hop-get-combo-part (key-combo n)
-  "From a list of keys for a position, get n of them as a single string."
-  (apply 'concat (evil-hop-slice key-combo 0 n)))
+(defun evil-hop-get-combo-part (key-combo a b)
+  "From a list of keys for a position, get a to b of them as a single string."
+  (apply 'concat (evil-hop-slice key-combo a b)))
 
 (provide 'evil-hop)
