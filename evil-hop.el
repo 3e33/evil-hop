@@ -74,11 +74,13 @@ and return the new list.
     (setq l (cons 0 l)))
   l)
 
+;;;###autoload
 (defun evil-hop-entry (input)
   "Entry point to evil-hop-hop that takes any key input and turns it into a command."
   (interactive "k")
   (evil-hop-hop (key-binding input)))
 
+;;;###autoload
 (defun evil-hop-hop (command)
   "Hop to it."
   (let* ((inhibit-quit t)
