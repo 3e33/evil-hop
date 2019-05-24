@@ -1,13 +1,23 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;          Evil-Hop           ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Description: Inspired by Vim's Easy Motion, brings similar functionality to Emacs
-;; Version: 0.2
-;; Copyright (C) 2019 3e33 @ http://github.com/3e33
-;;
-;; This program is free software: you can redistribute it and/or modify
+;;; evil-hop.el --- Hop around the buffer using key combinations
+
+;; Author: 3e33
+;; Version: 0.3
+;; Package-Requires: ((emacs "24") (evil "1.2"))
+;; Keywords: convenience, tools, abbrev
+;; URL: https://github.com/3e33/evil-hop
+
+;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Commentary:
+;;
+;; Evil-Hop allows you to quickly jump around a buffer using generated key
+;; combinations. For example you can bind the entry function to your space key
+;; and then press "<SPC>w" to attach a highlighted key sequence to each word jump.
+;; You can then press this key sequence to jump to that word.
+;; If you have used Vim before, this package is similar to Vim's EasyMotion plugin.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defcustom evil-hop-highlight-keys
   "asdghklqwertyuiopzxcvbnmfj"
@@ -198,3 +208,5 @@ for key press decisions."
   (apply 'concat (evil-hop-slice key-combo a b)))
 
 (provide 'evil-hop)
+
+;;; evil-hop.el ends here
