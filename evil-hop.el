@@ -117,8 +117,8 @@ location."
   (dotimes (i (length jump-alist))
     (let* ((position (nth 1 (nth i jump-alist)))
            (key-combo (nth 0 (nth i jump-alist)))
-           (slice-max (+ (* (/ combo-length 2)) 2))
            (slice-min (* (/ combo-length 2) 2))
+           (slice-max (+ slice-min 2))
            (combo-part (evil-hop-get-combo-part key-combo slice-min slice-max))
            (line-end (evil-hop-get-eol-after-point position)))
       (evil-hop-make-overlay position
@@ -148,16 +148,19 @@ location."
 (defun evil-hop-get-position-list (command)
   "Run the given command until the start or end of the window
 and return a list of positions that have been produced."
-  (let ((locations '()))
+  (let ((locations '())
+        (saved-evil-state evil-state))
     (save-excursion
       (save-restriction
         (narrow-to-region (window-start) (window-end))
+        (setq evil-state 'normal)
         (while (progn
                  (ignore-errors
                    (command-execute command)
                    (if (equal (car (last locations)) (point))
                        nil
-                     (setq locations (append locations (list (point))))))))))
+                     (setq locations (append locations (list (point))))))))
+        (setq evil-state saved-evil-state)))
     locations))
 
 (defun evil-hop-make-overlay (location text face &optional after-string)
@@ -167,8 +170,8 @@ for key press decisions."
   (let ((overlay (make-overlay location (+ location (length text)))))
     (overlay-put overlay 'display text)
     (overlay-put overlay 'face face)
-    (and after-string
-         (overlay-put overlay 'after-string after-string))))
+    (when after-string
+      (overlay-put overlay 'after-string after-string))))
 
 (defun evil-hop-get-eol-after-point (point)
   "Get the position of the end of line after the provided point."
