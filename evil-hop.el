@@ -12,12 +12,14 @@
 ;;; Commentary:
 ;;
 ;; Evil-Hop allows you to quickly jump around a buffer using generated key
-;; combinations. For example you can bind the entry function to your space key
+;; combinations.  For example you can bind the entry function to your space key
 ;; and then press "<SPC>w" to attach a highlighted key sequence to each word jump.
 ;; You can then press this key sequence to jump to that word.
 ;; If you have used Vim before, this package is similar to Vim's EasyMotion plugin.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+;;; Code:
 
 (defcustom evil-hop-highlight-keys
   "asdghklqwertyuiopzxcvbnmfj"
@@ -31,23 +33,25 @@
   :group 'evil-hop)
 
 (defun evil-hop-convert-base (number base)
-  "Convert a given number in base 10 to another base
-for example 10 -> (1 0 1 0) in binary."
+  "Convert a given NUMBER in base 10 to another BASE for example 10 -> (1 0 1 0) in binary."
   (if (< number base)
       (list number)
     (append (evil-hop-convert-base (/ number base) base)
             (list (% number base)))))
 
 (defun evil-hop-reorder-list (selectors selection)
-  "Re-order a given list by supplying your own ordering
-and return the new list.
-'(0 3 2 2) + '(a b c d) = '(a d c c)."
+  "Re-order a given list by supplying your own ordering and return the new list.
+'(0 3 2 2) + '(a b c d) = '(a d c c).
+Argument SELECTORS a list of integers that can be usd for the nth function.
+Argument SELECTION a list."
   (let (result)
     (dolist (position selectors result)
       (setq result (append result (list (nth position selection)))))))
 
 (defun evil-hop-get-overlay-keys (n-positions key-candidates)
-  "Make a list of keys to use for the overlay."
+  "Make a list of keys to use for the overlay.
+Argument N-POSITIONS a positive integer to describe the number of positions to generate keys for.
+Argument KEY-CANDIDATES a list of strings to use as key candidates."
   (let* ((base (length key-candidates))
          (power (floor (log n-positions base)))
          (block (expt base power))
@@ -79,20 +83,23 @@ and return the new list.
     result))
 
 (defun evil-hop-zero-padding (l power)
-  "Pads a list with extra zeroes, i.e, list goes in, more zeroes come out."
+  "Pads a list with extra zeroes, i.e, list goes in, more zeroes come out.
+Argument L list.
+Argument POWER number of zeroes to pad with according to the power of N being described by L."
   (while (< (length l) power)
     (setq l (cons 0 l)))
   l)
 
 ;;;###autoload
 (defun evil-hop-entry (input)
-  "Entry point to evil-hop-hop that takes any key input and turns it into a command."
+  "Entry point to evil-hop-hop that takes any key INPUT and turns it into a command."
   (interactive "k")
   (evil-hop-hop (key-binding input)))
 
 ;;;###autoload
 (defun evil-hop-hop (command)
-  "Hop to it."
+  "Hop to it.
+Argument COMMAND a Lisp function."
   (let* ((inhibit-quit t)
          (jump-alist (let* ((locations (evil-hop-get-position-list command))
                             (keys (evil-hop-get-overlay-keys (length locations)
@@ -125,7 +132,9 @@ location."
     result))
 
 (defun evil-hop-show-jump-map (jump-alist combo-length)
-  "Create and show the jump map."
+  "Create and show the jump map.
+Argument JUMP-ALIST an alist describing the jumps.
+Argument COMBO-LENGTH max length of key combination."
   (dotimes (i (length jump-alist))
     (let* ((position (nth 1 (nth i jump-alist)))
            (key-combo (nth 0 (nth i jump-alist)))
@@ -145,7 +154,7 @@ location."
                                    (string 10)))))))
 
 (defun evil-hop-filter-close-positions (jump-alist)
-  "Clean up jump-alist positions that are too close together."
+  "Clean up JUMP-ALIST positions that are too close together."
   (let ((i 0))
     (while (< (+ 1 i)
               (length jump-alist))
@@ -158,8 +167,7 @@ location."
     jump-alist))
 
 (defun evil-hop-get-position-list (command)
-  "Run the given command until the start or end of the window
-and return a list of positions that have been produced."
+  "Run the given COMMAND until the start or end of the window and return a list of positions that have been produced."
   (let ((locations '())
         (saved-evil-state evil-state))
     (save-excursion
@@ -176,9 +184,8 @@ and return a list of positions that have been produced."
     locations))
 
 (defun evil-hop-make-overlay (location text face &optional after-string)
-  "Make an overlay at the given location and give it
-some properties such as a highlight and changing the text
-for key press decisions."
+  "Make an overlay at the given LOCATION and give it some properties such as a highlight and changing the TEXT for key press decisions.
+Argument FACE emacs face."
   (let ((overlay (make-overlay location (+ location (length text)))))
     (overlay-put overlay 'display text)
     (overlay-put overlay 'face face)
@@ -186,7 +193,7 @@ for key press decisions."
       (overlay-put overlay 'after-string after-string))))
 
 (defun evil-hop-get-eol-after-point (point)
-  "Get the position of the end of line after the provided point."
+  "Get the position of the end of line after the provided POINT."
   (save-excursion
     (goto-char point)
     (end-of-line)
@@ -198,13 +205,16 @@ for key press decisions."
   (remove-overlays (point-min) (point-max) 'face 'evil-hop-highlight))
 
 (defun evil-hop-slice (list start end)
-  "Returns a slice of given list."
+  "Returns a slice of given LIST.
+Argument START slice start.
+Argument END slice end."
   (if (< (length list) end)
       list
     (seq-subseq list start end)))
 
 (defun evil-hop-get-combo-part (key-combo a b)
-  "From a list of keys for a position, get a to b of them as a single string."
+  "From a list of keys for a position, get A to B of them as a single string.
+Argument KEY-COMBO list describing the key combination."
   (apply 'concat (evil-hop-slice key-combo a b)))
 
 (provide 'evil-hop)
