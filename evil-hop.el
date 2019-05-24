@@ -94,8 +94,9 @@ Argument POWER number of zeroes to pad with according to the power of N being de
 (defun evil-hop-entry (input)
   "Entry point to evil-hop-hop that takes any key INPUT and turns it into a command."
   (interactive "k")
-  (unless (equal input " ")
-    (evil-hop-hop (key-binding input))))
+  (let ((command (key-binding input)))
+    (unless (equal command 'evil-hop-entry)
+      (evil-hop-hop (key-binding input)))))
 
 ;;;###autoload
 (defun evil-hop-hop (command)
