@@ -1,7 +1,7 @@
 ;;; evil-hop.el --- Hop around the buffer using key combinations
 
 ;; Author: 3e33
-;; Version: 0.3
+;; Version: 0.4
 ;; Package-Requires: ((emacs "24") (evil "1.2"))
 ;; Keywords: convenience, tools, abbrev
 ;; URL: https://github.com/3e33/evil-hop
@@ -94,7 +94,8 @@ Argument POWER number of zeroes to pad with according to the power of N being de
 (defun evil-hop-entry (input)
   "Entry point to evil-hop-hop that takes any key INPUT and turns it into a command."
   (interactive "k")
-  (evil-hop-hop (key-binding input)))
+  (unless (equal input " ")
+    (evil-hop-hop (key-binding input))))
 
 ;;;###autoload
 (defun evil-hop-hop (command)
