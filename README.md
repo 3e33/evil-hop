@@ -36,10 +36,37 @@ for example
     
 ## Why not use [Avy](https://github.com/abo-abo/avy)?
 Evil-Hop took its inspiration from Easy Motion, and tries to do things the same way.
-Although it's not a port, everything was written from scratch. Avy's user friendliness is
-in my opinion not as good as Easy Motion, and its compatibility with Evil is sometimes wonky.
+Although it's not a port, everything was written from scratch. Evil-Hop was built with Evil and Easy-Motion in mind.
+So if you're coming to Emacs from Vim, Evil-Hop should be more comfortable.
 
-Evil-Hop was built with Evil and Easy-Motion in mind. So if you're coming to Emacs from Vim, Evil-Hop should be more comfortable.
+Here is is a more detailed comparison between Avy (left) and Evil-Hop (right):
+
+Evil-Hop and EasyMotion both limit the number of key presses to the bare minimum, it's extremely rare
+to have to go above 2 key presses. Also the closer to the cursor the less key presses required.
+
+Word start motion.
+
+![1](https://user-images.githubusercontent.com/33631407/58362324-76035680-7ec8-11e9-96f7-d4ca48017f93.jpg)
+
+Evil-Hop builds its jump keys from the cursor starting point, not from the top of the window.
+
+![2](https://user-images.githubusercontent.com/33631407/58362323-76035680-7ec8-11e9-8c57-8361224a18d4.jpg)
+
+Evil-Hop tried to work with any motion command by default, here is Evil and Vim's `ge` command, something Avy
+doesn't have unless you add it yourself.
+
+![3](https://user-images.githubusercontent.com/33631407/58362322-76035680-7ec8-11e9-9e24-784d34ce3059.jpg)
+
+Evil-Hop will try to work with any motion command, you don't need to extend it in any way. Here is motion for
+`l`.
+
+![4](https://user-images.githubusercontent.com/33631407/58362321-756ac000-7ec8-11e9-8957-bc10348f0f4d.jpg)
+
+To "extend" Evil-Hop you only need to create a new motion.
+
+Here is Evil-Hop running a binding. `"K" #'(lambda () (interactive) (evil-previous-line 3))`
+
+![5](https://user-images.githubusercontent.com/33631407/58362320-756ac000-7ec8-11e9-9b2d-1986990e7fde.jpg)
 
 ## Does Evil-Hop work if I don't use Evil?
 So far, yes. But that's by accident, not design. My primary goal is to extend Evil.
