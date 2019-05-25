@@ -39,16 +39,19 @@ Evil-Hop took its inspiration from Easy Motion, and tries to do things the same 
 Although it's not a port, everything was written from scratch. Evil-Hop was built with Evil and Easy-Motion in mind.
 So if you're coming to Emacs from Vim, Evil-Hop should be more comfortable.
 
-Here is is a more detailed comparison between Avy (left) and Evil-Hop (right):
+Here is a more detailed comparison between Avy (left) and Evil-Hop (right):
 
 Evil-Hop and EasyMotion both limit the number of key presses to the bare minimum, it's extremely rare
-to have to go above 2 key presses. Also the closer to the cursor the less key presses required.
+to have to go above 2 key presses. Also the closer to the cursor the less key presses required. As you can see
+the jump locations are also as closer to what you would expect while running a given command than Avy, because
+Evil-Hop builds its location list by actually running the original command, so there are far less surprises between
+where you want to go and the locations provided.
 
 Word start motion.
 
 ![1](https://user-images.githubusercontent.com/33631407/58362324-76035680-7ec8-11e9-96f7-d4ca48017f93.jpg)
 
-Evil-Hop builds its jump keys from the cursor starting point, not from the top of the window.
+Evil-Hop and EasyMotion both build its jump keys from the cursor starting point, not from the top of the window.
 
 ![2](https://user-images.githubusercontent.com/33631407/58362323-76035680-7ec8-11e9-8c57-8361224a18d4.jpg)
 
