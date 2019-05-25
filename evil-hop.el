@@ -1,7 +1,7 @@
 ;;; evil-hop.el --- Hop around the buffer using key combinations
 
 ;; Author: 3e33
-;; Version: 0.41
+;; Version: 0.42
 ;; Package-Requires: ((emacs "24") (evil "1.2"))
 ;; Keywords: convenience, tools, abbrev
 ;; URL: https://github.com/3e33/evil-hop
@@ -53,7 +53,7 @@ Argument SELECTION a list."
 Argument N-POSITIONS a positive integer to describe the number of positions to generate keys for.
 Argument KEY-CANDIDATES a list of strings to use as key candidates."
   (let* ((base (length key-candidates))
-         (power (floor (log n-positions base)))
+         (power (ceiling (log n-positions base)))
          (block (expt base power))
          (split (floor (- block
                           (* (/ n-positions block)
@@ -113,7 +113,8 @@ Argument COMMAND a Lisp function."
     (while (> (length jump-alist)
               1)
       (setq jump-sequence (concat jump-sequence (string (read-char-exclusive))))
-      (setq jump-alist (seq-filter #'(lambda (elt) (string-prefix-p jump-sequence (apply 'concat (car elt))))
+      (setq jump-alist (seq-filter #'(lambda (elt) (string-prefix-p jump-sequence
+                                                                    (apply 'concat (car elt))))
                                    jump-alist))
       (evil-hop-remove-overlays)
       (evil-hop-show-jump-map jump-alist (length jump-sequence)))
@@ -210,9 +211,10 @@ Argument FACE emacs face."
   "Returns a slice of given LIST.
 Argument START slice start.
 Argument END slice end."
-  (if (< (length list) end)
-      list
-    (seq-subseq list start end)))
+  (let ((length (length list)))
+    (if (> end length)
+        (seq-subseq list start length)
+      (seq-subseq list start end))))
 
 (defun evil-hop-get-combo-part (key-combo a b)
   "From a list of keys for a position, get A to B of them as a single string.
