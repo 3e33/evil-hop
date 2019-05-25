@@ -53,7 +53,7 @@ Argument SELECTION a list."
 Argument N-POSITIONS a positive integer to describe the number of positions to generate keys for.
 Argument KEY-CANDIDATES a list of strings to use as key candidates."
   (let* ((base (length key-candidates))
-         (power (ceiling (log n-positions base)))
+         (power (floor (log n-positions base)))
          (block (expt base power))
          (split (floor (- block
                           (* (/ n-positions block)
@@ -61,7 +61,7 @@ Argument KEY-CANDIDATES a list of strings to use as key candidates."
          (shift (* base split))
          (keys (mapcar 'string key-candidates))
          (result '()))
-    (if (= n-positions (expt base power))
+    (if (= n-positions block)
         (dotimes (i n-positions)
           (setq result
                 (append result
