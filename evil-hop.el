@@ -1,7 +1,7 @@
 ;;; evil-hop.el --- Hop around the buffer using key combinations
 
 ;; Author: 3e33
-;; Version: 0.42
+;; Version: 0.5
 ;; Package-Requires: ((emacs "24") (evil "1.2"))
 ;; Keywords: convenience, tools, abbrev
 ;; URL: https://github.com/3e33/evil-hop
@@ -15,6 +15,7 @@
 ;; combinations.  For example you can bind the entry function to your space key
 ;; and then press "<SPC>w" to attach a highlighted key sequence to each word jump.
 ;; You can then press this key sequence to jump to that word.
+;;
 ;; If you have used Vim before, this package is similar to Vim's EasyMotion plugin.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -49,38 +50,41 @@ Argument SELECTION a list."
       (setq result (append result (list (nth position selection)))))))
 
 (defun evil-hop-get-overlay-keys (n-positions key-candidates)
-  "Make a list of keys to use for the overlay.
-Argument N-POSITIONS a positive integer to describe the number of positions to generate keys for.
-Argument KEY-CANDIDATES a list of strings to use as key candidates."
+  "Make a list of keys to use for the overlay. Where N-POSITIONS is the number of positions
+to create a jump list for, and KEY-CANDIDATES is a list of possible keys."
   (let* ((base (length key-candidates))
-         (power (floor (log n-positions base)))
-         (block (expt base power))
-         (split (floor (- block
-                          (* (/ n-positions block)
-                             (expt base (- power 1))))))
+         (power (ceiling (log n-positions base)))
+         (key (/ (- n-positions (expt base power))
+                 (* (expt base (- power 2))
+                    (- 1 base))))
+         (split (* key (expt base (- power 2))))
          (shift (* base split))
          (keys (mapcar 'string key-candidates))
          (result '()))
-    (if (= n-positions block)
+    (if (< split 1)
         (dotimes (i n-positions)
           (setq result
-                (append result
-                        (list (evil-hop-reorder-list
-                               (evil-hop-zero-padding (evil-hop-convert-base i base) power)
-                               keys)))))
+                (append result (evil-hop-create-jump-combo i 0 base power keys))))
       (dotimes (i split)
         (setq result
-              (append result
-                      (list (evil-hop-reorder-list
-                             (evil-hop-zero-padding (evil-hop-convert-base i base) power)
-                             keys)))))
+              (append result (evil-hop-create-jump-combo i 0 base (- power 1) keys))))
       (dotimes (i (- n-positions split))
         (setq result
-              (append result
-                      (list (evil-hop-reorder-list
-                             (evil-hop-convert-base (+ i shift) base)
-                             keys))))))
+              (append result (evil-hop-create-jump-combo i shift base 0 keys)))))
     result))
+
+(defun evil-hop-create-jump-combo (position shift base zero-padding keys)
+  "Utility function that create a jump combination.
+Where POSITION is an integer for the position.
+SHIFT is the number to shift this position by.
+BASE is the number base to use.
+ZERO-PADDING is the amount of zero padding to add.
+KEYS is a list of potential keys to use."
+  (list (evil-hop-reorder-list
+         (evil-hop-zero-padding (evil-hop-convert-base (+ position shift)
+                                                       base)
+                                zero-padding)
+         keys)))
 
 (defun evil-hop-zero-padding (l power)
   "Pads a list with extra zeroes, i.e, list goes in, more zeroes come out.
@@ -202,8 +206,9 @@ Argument FACE emacs face."
     (end-of-line)
     (point)))
 
+;;;###autoload
 (defun evil-hop-remove-overlays ()
-  "Clears the jump choice overlays."
+  "Clears the jump choice overlays. In case of emergency break interactive glass."
   (interactive)
   (remove-overlays (point-min) (point-max) 'face 'evil-hop-highlight))
 
