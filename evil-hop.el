@@ -100,6 +100,8 @@ Argument POWER number of zeroes to pad with according to the power of N being de
   (interactive "k")
   (let ((command (key-binding input)))
     (unless (equal command 'evil-hop-entry)
+      (evil-set-command-property 'evil-hop-hop :type
+                                 (evil-get-command-property command :type))
       (evil-hop-hop command))))
 
 ;;;###autoload
