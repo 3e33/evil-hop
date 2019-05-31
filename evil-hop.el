@@ -1,7 +1,7 @@
 ;;; evil-hop.el --- Hop around the buffer using key combinations
 
 ;; Author: 3e33
-;; Version: 0.5
+;; Version: 0.6
 ;; Package-Requires: ((emacs "24") (evil "1.2"))
 ;; Keywords: convenience, tools, abbrev
 ;; URL: https://github.com/3e33/evil-hop
