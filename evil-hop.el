@@ -104,8 +104,7 @@ Argument POWER number of zeroes to pad with according to the power of N being de
 
 ;;;###autoload
 (defun evil-hop-hop (command)
-  "Hop to it.
-Argument COMMAND a Lisp function."
+  "Hop to it. Where COMMAND is used to create a list of \"it\"s to hop to."
   (let* ((inhibit-quit t)
          (jump-alist (let* ((locations (evil-hop-get-position-list command))
                             (keys (evil-hop-get-overlay-keys (length locations)
@@ -175,19 +174,16 @@ Argument COMBO-LENGTH max length of key combination."
 
 (defun evil-hop-get-position-list (command)
   "Run the given COMMAND until the start or end of the window and return a list of positions that have been produced."
-  (let ((locations '())
-        (saved-evil-state evil-state))
+  (let ((locations '()))
     (save-excursion
       (save-restriction
         (narrow-to-region (window-start) (window-end))
-        (setq evil-state 'normal)
-        (while (progn
-                 (ignore-errors
-                   (command-execute command)
-                   (if (equal (car (last locations)) (point))
-                       nil
-                     (setq locations (append locations (list (point))))))))
-        (setq evil-state saved-evil-state)))
+        (evil-with-state 'normal
+          (while (progn
+                   (ignore-errors
+                     (funcall-interactively command)
+                     (unless (equal (car (last locations)) (point))
+                       (setq locations (append locations (list (point)))))))))))
     locations))
 
 (defun evil-hop-make-overlay (location text face &optional after-string)

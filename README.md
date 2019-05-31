@@ -73,6 +73,7 @@ Here is Evil-Hop running a binding. `"K" #'(lambda () (interactive) (evil-previo
 
 ## Does Evil-Hop work if I don't use Evil?
 So far, yes. But that's by accident, not design. My primary goal is to extend Evil.
+You will however still need the Evil package installed, as some functions from Evil are used.
 
 ## Are all of the Easy-Motion features supported?
 Not yet, but I think the most important ones are. If you have a feature request please add an Issue.
