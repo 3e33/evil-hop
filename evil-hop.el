@@ -1,7 +1,7 @@
 ;;; evil-hop.el --- Hop around the buffer using key combinations
 
 ;; Author: 3e33
-;; Version: 0.6
+;; Version: 0.61
 ;; Package-Requires: ((emacs "24") (evil "1.2"))
 ;; Keywords: convenience, tools, abbrev
 ;; URL: https://github.com/3e33/evil-hop
@@ -176,16 +176,19 @@ Argument COMBO-LENGTH max length of key combination."
 
 (defun evil-hop-get-position-list (command)
   "Run the given COMMAND until the start or end of the window and return a list of positions that have been produced."
-  (let ((locations '()))
+  (let ((locations '())
+        (saved-evil-state evil-state))
     (save-excursion
       (save-restriction
         (narrow-to-region (window-start) (window-end))
-        (evil-with-state 'normal
-          (while (progn
-                   (ignore-errors
-                     (funcall-interactively command)
-                     (unless (equal (car (last locations)) (point))
-                       (setq locations (append locations (list (point)))))))))))
+        (evil-normal-state)
+        (while (progn
+                 (ignore-errors
+                   (command-execute command)
+                   (if (equal (car (last locations)) (point))
+                       nil
+                     (setq locations (append locations (list (point))))))))
+        (setq evil-state saved-evil-state)))
     locations))
 
 (defun evil-hop-make-overlay (location text face &optional after-string)
